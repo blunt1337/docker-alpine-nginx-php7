@@ -14,7 +14,11 @@ PHP include the following modules:
 * openssl
 
 ## Simple usage
-Create a Dockerfile in your project with the simple content `FROM virtualgarden/nginx-php7`
+Create a Dockerfile in your project with the simple content
+```
+FROM virtualgarden/nginx-php7
+COPY . /app
+```
 then [build](https://docs.docker.com/v1.8/reference/commandline/build/) and [run](https://docs.docker.com/engine/reference/commandline/run/) your container
 
 ## Custom usage
