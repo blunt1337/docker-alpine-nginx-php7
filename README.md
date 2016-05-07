@@ -3,7 +3,7 @@
 This is a base [Docker image](https://www.docker.com/) to use as a web server with Nginx and PHP 7.
 Nginx and PHP are both preconfigured and ready to handle your connection.
 
-PHP include the following modules:
+PHP includes the following modules:
 * json
 * gd
 * curl
@@ -14,7 +14,7 @@ PHP include the following modules:
 * openssl
 
 ## Simple usage
-Create a Dockerfile in your project with the simple content
+Create a Dockerfile in your project with just those lines:
 ```Dockerfile
 FROM virtualgarden/nginx-php7
 COPY . /app
@@ -22,18 +22,18 @@ COPY . /app
 then [build](https://docs.docker.com/v1.8/reference/commandline/build/) and [run](https://docs.docker.com/engine/reference/commandline/run/) your container
 
 ## Custom usage
-To customize the base image, you can change the base to `FROM virtualgarden/nginx-php7:onbuild`
+To customize our base image, change the base to `FROM virtualgarden/nginx-php7:onbuild`
 and put a `config.sh` file with the following customizable code:
 ```sh
 # Application file directory
 # (add WORKDIR /xxx and CMD mv -R /app /xxx in your dockerfile to make it work)
 APP_DIR="/app"
 
-# Service user
-USER="app"
-
 # Document root in the APP_DIR
 STATIC_DIR="static"
+
+# Service user
+USER="app"
 
 # Server RAM
 RAM="512"
