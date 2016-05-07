@@ -58,7 +58,23 @@ http {
 	include /etc/nginx/servers/*.conf;
 }" > /etc/nginx/nginx.conf
 
-#TODO: add a default config inside /etc/nginx/servers/*.conf
+# Default nginx configuration
+echo "
+server {
+	listen 80 default_server;
+	root \"$APP_DIR/$STATIC_DIR\";
+	
+	# Php files
+	location ~ \\.php\$ {
+		try_files \$uri /index.php?url=\$uri&\$args;
+		fastcgi_pass unix:/var/run/php-fpm7.sock;
+	}
+	
+	location / {
+		# Cache time
+		add_header \"Cache-Control\" \$cacheable_types;
+	}
+}" >> /etc/nginx/servers/default.conf
 
 # Nginx pid file
 mkdir /run/nginx

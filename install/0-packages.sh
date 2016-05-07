@@ -24,6 +24,7 @@ apk add --update php7-openssl@testing
 apk add --update runit@testing
 
 # SSL
+apk add --update openssl
 apk add --update ca-certificates
 
 # Clear
