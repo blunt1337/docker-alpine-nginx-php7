@@ -15,9 +15,9 @@ cgi.fix_pathinfo = 0;
 # PHP fpm
 echo "
 [global]
-emergency_restart_threshold = 10
+emergency_restart_threshold = 3
 emergency_restart_interval = 1m
-process_control_timeout = 10s
+process_control_timeout = 5s
 
 [www]
 listen = /var/run/php-fpm7.sock
