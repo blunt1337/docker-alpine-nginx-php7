@@ -12,7 +12,7 @@ export APP_DIR="/app"
 export USER="app"
 
 # Document root in the APP_DIR
-export STATIC_DIR="static"
+export STATIC_DIR=""
 
 # Server RAM
 export RAM="512"

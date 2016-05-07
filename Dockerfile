@@ -9,6 +9,7 @@ COPY install /install
 RUN /bin/sh /install/install.sh
 
 # App files
+COPY index.php /app/index.php
 WORKDIR /app
 
 # Setup
