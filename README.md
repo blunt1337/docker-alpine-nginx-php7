@@ -39,7 +39,7 @@ USER="app"
 UPLOAD_MAX="10"
 
 # SSH password
-# (add EXPOSE 22 to make it work)
+# (add EXPOSE 80 22 in your dockerfile to make it work)
 USER_PASSWORD=""
 
 # Server RAM (by default, the maximum RAM of your container)
