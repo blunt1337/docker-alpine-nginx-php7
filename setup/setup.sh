@@ -15,15 +15,17 @@ USER="app"
 # Document root in the APP_DIR
 STATIC_DIR="static"
 
-# Server RAM
-RAM="512"
-
 # Maximum upload size in Megabytes
 UPLOAD_MAX="10"
 
 # SSH password
 # (add EXPOSE 22 to make it work)
 USER_PASSWORD=""
+
+# Server RAM
+memory_limit=$(expr $(cat /sys/fs/cgroup/memory/memory.limit_in_bytes) / 1024 / 1024)
+memory_free=$(free -m | awk 'NR==2{printf $2}')
+RAM=$(($memory_limit > $memory_free ? $memory_free : $memory_limit))
 
 # Load the child config
 if [ -f /app/config.sh ]; then

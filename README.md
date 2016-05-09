@@ -35,15 +35,15 @@ STATIC_DIR="static"
 # Service user
 USER="app"
 
-# Server RAM
-RAM="512"
-
 # Maximum upload size in Megabytes
 UPLOAD_MAX="10"
 
 # SSH password
 # (add EXPOSE 22 to make it work)
 USER_PASSWORD=""
+
+# Server RAM (by default, the maximum RAM of your container)
+#RAM="512"
 ```
 
 ## I need more PHP modules
