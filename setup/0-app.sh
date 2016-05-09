@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 # Create the user
 adduser -D -g "" "$USER"
 

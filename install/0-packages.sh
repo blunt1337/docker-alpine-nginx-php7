@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 # Add testing packages
 echo -e "
 http://dl-cdn.alpinelinux.org/alpine/edge/main

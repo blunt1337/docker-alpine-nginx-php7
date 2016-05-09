@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 # Create a defaut nginx configuration
 max_threads=$(php -r "echo ceil($RAM / 4);")
 
@@ -59,6 +62,7 @@ http {
 }" > /etc/nginx/nginx.conf
 
 # Default nginx configuration
+mkdir -p /etc/nginx/servers
 echo "
 server {
 	listen 80 default_server;

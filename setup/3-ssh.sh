@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 if [ -n "$USER_PASSWORD" ]; then
 	# Package
 	apk add --update openssh
