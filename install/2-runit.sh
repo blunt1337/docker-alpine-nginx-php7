@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 # Nginx service
 mkdir /etc/service/nginx
 echo "#!/bin/sh

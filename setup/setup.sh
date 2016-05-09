@@ -15,7 +15,9 @@ export USER="app"
 export STATIC_DIR=""
 
 # Server RAM
-export RAM="512"
+memory_limit=$(expr $(cat /sys/fs/cgroup/memory/memory.limit_in_bytes) / 1024 / 1024)
+memory_free=$(free -m | awk 'NR==2{printf $2}')
+export RAM=$(($memory_limit > $memory_free ? $memory_free : $memory_limit))
 
 # Maximum upload size in Megabytes
 export UPLOAD_MAX="10"

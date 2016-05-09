@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 # php.ini changes
 echo "
 post_max_size = ${UPLOAD_MAX}M
