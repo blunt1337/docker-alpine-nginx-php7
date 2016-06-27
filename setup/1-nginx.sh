@@ -62,23 +62,28 @@ http {
 }" > /etc/nginx/nginx.conf
 
 # Default nginx configuration
-mkdir -p /etc/nginx/servers
-echo "
-server {
-	listen 80 default_server;
-	root \"$APP_DIR/$STATIC_DIR\";
-	
-	# Php files
-	location ~ \\.php\$ {
-		try_files \$uri /index.php?url=\$uri&\$args;
-		fastcgi_pass unix:/var/run/php-fpm7.sock;
-	}
-	
-	location / {
-		# Cache time
-		add_header \"Cache-Control\" \$cacheable_types;
-	}
-}" >> /etc/nginx/servers/default.conf
+if [ ! -f /etc/nginx/servers/default.conf ]; then
+	mkdir -p /etc/nginx/servers
+	echo "
+	server {
+		listen 80 default_server;
+		root \"$APP_DIR/$STATIC_DIR\";
+		
+		# Php files
+		location ~ \\.php\$ {
+			try_files \$uri =404;
+			fastcgi_pass unix:/var/run/php-fpm7.sock;
+		}
+		
+		location / {
+			# Cache time
+			add_header \"Cache-Control\" \$cacheable_types;
+		}
+	}" > /etc/nginx/servers/default.conf
+fi
+
+# Rename SERVER_SOFTWARE
+sed -i -r 's/(fastcgi_param\s+SERVER_SOFTWARE\s+).*;/\1virtualgarden;/g' /etc/nginx/fastcgi.conf
 
 # Nginx pid file
 mkdir /run/nginx
