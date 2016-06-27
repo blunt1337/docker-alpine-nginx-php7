@@ -34,4 +34,6 @@ for script in *; do
 done
 
 # Clean
-rm -R "$(dirname "$0")"
+rm -rf /tmp/*
+rm -f /app/Dockerfile
+rm -rf "$(dirname "$0")"
