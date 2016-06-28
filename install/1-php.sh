@@ -13,6 +13,13 @@ upload_max_filesize = 10M;
 max_file_uploads = 10M;
 max_execution_time = 60;
 cgi.fix_pathinfo = 0;
+
+session.use_trans_sid = 0;
+session.use_only_cookies = 1;
+session.hash_function = sha512;
+session.hash_bits_per_character = 5;
+session.entropy_file = /dev/urandom;
+session.entropy_length = 256;
 " >> /etc/php7/php.ini
 
 # PHP fpm
