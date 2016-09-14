@@ -35,7 +35,7 @@ http {
 	gzip_comp_level 6;
 	gzip_buffers 16 8k;
 	gzip_http_version 1.1;
-	gzip_types text/plain text/xml text/html text/css text/tab-separated-values text/csv text/javascript image/svg+xml application/xhtml+xml application/xml application/rss+xml application/x-javascript;
+	gzip_types text/plain text/xml text/html text/css text/tab-separated-values text/csv text/javascript image/svg+xml application/xhtml+xml application/xml application/rss+xml application/x-javascript application/javascript;
 	
 	# Cache
 	map \$sent_http_content_type \$cacheable_types {
