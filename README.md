@@ -1,5 +1,7 @@
 # VirtualGarden/nginx-php7
 
+[![](https://images.microbadger.com/badges/image/virtualgarden/nginx-php7.svg)](https://microbadger.com/images/virtualgarden/nginx-php7)
+
 This is a base [Docker image](https://www.docker.com/) to use as a web server with Nginx and PHP 7.
 Nginx and PHP are both preconfigured and ready to handle your connection.
 
