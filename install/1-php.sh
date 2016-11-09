@@ -20,6 +20,7 @@ session.hash_function = sha512;
 session.hash_bits_per_character = 5;
 session.entropy_file = /dev/urandom;
 session.entropy_length = 256;
+session.cookie_httponly = 1;
 " >> /etc/php7/php.ini
 
 # PHP fpm
