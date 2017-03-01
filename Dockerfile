@@ -1,7 +1,7 @@
 # PHP 7 docker environement with alpine, nginx, php7
 
 # Alpine base
-FROM alpine:latest
+FROM alpine:edge
 MAINTAINER Olivier Blunt <olivier.blunt@gmail.com>
 
 # Install
