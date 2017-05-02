@@ -36,4 +36,6 @@ listen.mode = 0666
 listen.allowed_clients = 127.0.0.1" > /etc/php7/php-fpm.d/www.conf
 
 # PHP alias
-ln -s $(which php7) /usr/bin/php
+if [ ! -f /usr/bin/php ]; then
+    ln -s $(which php7) /usr/bin/php
+fi
