@@ -75,7 +75,7 @@ if [ ! -f /etc/nginx/servers/default.conf ]; then
 		root \"$APP_DIR/$STATIC_DIR\";
 		
 		# Php files
-		location ~ \\.php\$ {
+		location ~* \\.php\$ {
 			try_files \$uri =404;
 			fastcgi_pass unix:/var/run/php-fpm7.sock;
 		}
