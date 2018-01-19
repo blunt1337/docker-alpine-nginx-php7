@@ -1,9 +1,9 @@
-# VirtualGarden/nginx-php7
+# blunt1337/nginx-php7
 
 [![](https://images.microbadger.com/badges/image/virtualgarden/nginx-php7.svg)](https://microbadger.com/images/virtualgarden/nginx-php7)
 
-This is a base [Docker image](https://www.docker.com/) to use as a web server with Nginx and PHP 7.
-Nginx and PHP are both preconfigured and ready to handle your connection.
+This is a [Docker image](https://www.docker.com/) to use as a web server with Nginx and PHP 7.1.
+Nginx and PHP are both preconfigured and ready to handle your connections.
 
 PHP includes the following modules:
 * json
@@ -16,37 +16,38 @@ PHP includes the following modules:
 * openssl
 
 ## Simple usage
-Create a Dockerfile in your project with just those lines:
-```Dockerfile
-FROM virtualgarden/nginx-php7
-COPY . /app
-```
-then [build](https://docs.docker.com/v1.8/reference/commandline/build/) and [run](https://docs.docker.com/engine/reference/commandline/run/) your container
+Just start it with `docker run -v .:/app blunt1337/nginx-php7` to use the current path as webroot.
 
 ## Custom usage
-To customize our base image, change the base to `FROM virtualgarden/nginx-php7:onbuild`
-and put a `config.sh` file with the following customizable code:
-```sh
-# Application file directory
-# (add WORKDIR /xxx and CMD mv -R /app /xxx in your dockerfile to make it work)
-APP_DIR="/app"
+The following configuation can be changed with [build args](https://docs.docker.com/compose/compose-file/#args).
+You can check the tests folder of this github for samples.
 
-# Document root in the APP_DIR
-STATIC_DIR="static"
+* APP_DIR
+	Application file directory, default to /app
 
-# Service user
-USER="app"
+* STATIC_DIR
+	Document root in APP_DIR.
+	With STATIC_DIR=public, the url http://host/ will fetch /app/public/index.php.
+	Default to APP_DIR root.
 
-# Maximum upload size in Megabytes
-UPLOAD_MAX="10"
+* USER
+	User and group running nginx/php process
 
-# SSH password
-# (add EXPOSE 80 22 in your dockerfile to make it work)
-USER_PASSWORD=""
+* HTTPS
+	Possible values are:
+	* off: Only listen for http.
+	* on: Listen for http and https.
+	* force: Listen for http and https, and redirect http to https.
+	Certificates must be placed as `/etc/nginx/ssl/fullchain.pem` and  `/etc/nginx/ssl/privkey.pem`.
 
-# Server RAM (by default, the maximum RAM of your container)
-#RAM="512"
-```
+* DOMAINS
+	List of allowed domains. Space separated. Default to all.
+
+* RAM
+	Server RAM in MB to calculate worker numbers, etc. Be default it will take the builder's machine max RAM.
+
+* UPLOAD_MAX
+	Maximum upload file size in MB, default to 10MB
 
 ## I need more PHP modules
 To install additionnal modules, let's say sqlite, go to [alpine packages](https://pkgs.alpinelinux.org/packages) and search for php7*sqlite. You will find `php7-pdo_sqlite`. Just add the line `CMD apk add --update php7-pdo_sqlite@testing` inside your Dockerfile to install it.
@@ -58,16 +59,7 @@ server {
 	listen 80 default_server;
 	root "/app";
 	
-	# Php files
-	location ~ \\.php\$ {
-		try_files $uri /index.php?url=$uri&$args;
-		fastcgi_pass unix:/var/run/php-fpm7.sock;
-	}
-	
-	location / {
-		# Cache time
-		add_header "Cache-Control" $cacheable_types;
-	}
+	...
 }
 ```
 then add in your Dockerfile `COPY my_custom.conf /etc/nginx/servers/default.conf`.
