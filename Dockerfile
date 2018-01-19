@@ -5,38 +5,38 @@ FROM alpine:latest
 MAINTAINER Olivier Blunt <contact@blunt.sh>
 
 # Application file directory
-ARG APP_DIR=/app
+ONBUILD ARG APP_DIR=/app
 
 # Document root in the APP_DIR
-ARG STATIC_DIR
+ONBUILD ARG STATIC_DIR
 
 # Service user
-ARG USER=app
+ONBUILD ARG USER=app
 
 # Enable https (possible values: on, off, or force. Default off)
 # Certificates must be stored as /etc/nginx/ssl/fullchain.pem and /etc/nginx/ssl/privkey.pem
-ARG HTTPS=off
+ONBUILD ARG HTTPS=off
 
 # Allowed domains, required for https (space separated)
-ARG DOMAINS
+ONBUILD ARG DOMAINS
 
 # Server RAM (in MB) (default calculated at build time)
-ARG RAM
+ONBUILD ARG RAM
 
 # Maximum upload size (in MB)
-ARG UPLOAD_MAX=10
+ONBUILD ARG UPLOAD_MAX=10
 
 # Install
 COPY install /install
 RUN /bin/sh /install/install.sh
 
 # App files
-WORKDIR $APP_DIR
-COPY index.php $APP_DIR/$STATIC_DIR/index.php
+ONBUILD WORKDIR $APP_DIR
+#COPY index.php $APP_DIR/$STATIC_DIR/index.php
 
 # Setup
 COPY setup /setup
-RUN /bin/sh /setup/setup.sh
+#RUN /bin/sh /setup/setup.sh
 
 # Run
 EXPOSE 80 443
