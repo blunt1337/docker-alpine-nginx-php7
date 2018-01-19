@@ -2,7 +2,7 @@
 
 # Alpine base
 FROM alpine:latest
-MAINTAINER Olivier Blunt <contact@gmail.com>
+MAINTAINER Olivier Blunt <contact@blunt.sh>
 
 # Application file directory
 ARG APP_DIR=/app
@@ -31,13 +31,13 @@ COPY install /install
 RUN /bin/sh /install/install.sh
 
 # App files
-WORKDIR /app
-COPY index.php /app/index.php
+WORKDIR $APP_DIR
+COPY index.php $APP_DIR/$STATIC_DIR/index.php
 
 # Setup
 COPY setup /setup
 RUN /bin/sh /setup/setup.sh
 
 # Run
-EXPOSE 80
+EXPOSE 80 443
 CMD ["runsvdir", "/etc/service"]

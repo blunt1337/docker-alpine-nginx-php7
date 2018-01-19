@@ -1,6 +1,6 @@
 # blunt1337/nginx-php7
 
-[![](https://images.microbadger.com/badges/image/virtualgarden/nginx-php7.svg)](https://microbadger.com/images/virtualgarden/nginx-php7)
+[![](https://images.microbadger.com/badges/image/blunt1337/nginx-php7.svg)](https://microbadger.com/images/blunt1337/nginx-php7)
 
 This is a [Docker image](https://www.docker.com/) to use as a web server with Nginx and PHP 7.1.
 Nginx and PHP are both preconfigured and ready to handle your connections.
@@ -16,7 +16,7 @@ PHP includes the following modules:
 * openssl
 
 ## Simple usage
-Just start it with `docker run -v .:/app blunt1337/nginx-php7` to use the current path as webroot.
+Just start it with `docker run -d -p 80:80 -v .:/app blunt1337/nginx-php7 ` to use the current path as webroot.
 
 ## Custom usage
 The following configuation can be changed with [build args](https://docs.docker.com/compose/compose-file/#args).
@@ -63,3 +63,7 @@ server {
 }
 ```
 then add in your Dockerfile `COPY my_custom.conf /etc/nginx/servers/default.conf`.
+
+## Extend this image
+Use the onbuild version that runs the setup files in the extended image.
+You can check the sample project [nginx-php7-laravel](https://github.com/blunt1337/docker-alpine-nginx-php7-laravel) as a sample.
