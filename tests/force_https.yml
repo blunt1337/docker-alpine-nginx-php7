@@ -1,0 +1,14 @@
+# Test the HTTPS=force + DOMAINS=test.localhost
+version: '3.4'
+services:
+  web:
+    build:
+      context: ../
+      args:
+        HTTPS: force
+        DOMAINS: force.localhost
+    ports:
+      - 80:80
+      - 443:443
+networks:
+  default:

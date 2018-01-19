@@ -1,0 +1,10 @@
+# Test the HTTPS=off without DOMAINS
+version: '3.4'
+services:
+  web:
+    build: ../
+    ports:
+      - 80:80
+      - 443:443
+networks:
+  default:

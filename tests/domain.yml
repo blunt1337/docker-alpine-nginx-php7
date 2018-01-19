@@ -1,0 +1,12 @@
+# Test the HTTPS=off + DOMAINS=test.localhost
+version: '3.4'
+services:
+  web:
+    build:
+      context: ../
+      args:
+        DOMAINS: test.localhost test2.localhost
+    ports:
+      - 80:80
+networks:
+  default:

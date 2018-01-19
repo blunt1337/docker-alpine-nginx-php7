@@ -1,13 +1,6 @@
 #!/bin/bash
 set -e
 
-# Add testing packages
-echo -e "
-http://dl-cdn.alpinelinux.org/alpine/edge/community
-http://dl-cdn.alpinelinux.org/alpine/edge/main
-@testing http://dl-cdn.alpinelinux.org/alpine/edge/testing
-" >> /etc/apk/repositories
-
 # Update
 apk upgrade -q -U -a
 

@@ -5,7 +5,7 @@ set -e
 max_threads=$(php -r "echo ceil($RAM / 4);")
 
 echo "
-user	$USER $USER;
+user $USER $USER;
 worker_processes auto;
 worker_rlimit_nofile 8192;
 
@@ -35,7 +35,8 @@ http {
 	gzip_comp_level 6;
 	gzip_buffers 16 8k;
 	gzip_http_version 1.1;
-	gzip_types text/plain text/xml text/html text/css text/tab-separated-values text/csv text/javascript image/svg+xml application/xhtml+xml application/xml application/rss+xml application/x-javascript application/javascript application/json;
+	gzip_min_length 256;
+	gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript text/tab-separated-values text/csv image/svg+xml application/javascript;
 	
 	# woff2
 	types {
@@ -69,26 +70,110 @@ http {
 # Default nginx configuration
 if [ ! -f /etc/nginx/servers/default.conf ]; then
 	mkdir -p /etc/nginx/servers
+	
+	if [ "$HTTPS" == 'force' ]; then
+		echo "
+		server {
+			listen 80 default_server;
+			server_name _;
+			return 444;
+		}
+		server {
+			listen 80;
+			server_name 127.0.0.1 $DOMAINS;
+			
+			location / {
+	    		rewrite ^ https://\$host\$request_uri? permanent;
+			}
+		}
+		server {
+			listen 443 ssl http2;
+			server_name $DOMAINS;
+			
+		" > /etc/nginx/servers/default.conf
+	elif [ "$HTTPS" == 'on' ]; then
+		echo "
+		server {
+			listen 80 default_server;
+			server_name _;
+			return 444;
+		}
+		server {
+			listen 80;
+			listen 443 ssl http2;
+			server_name 127.0.0.1 $DOMAINS;
+			
+		" > /etc/nginx/servers/default.conf
+	elif [ -z "$DOMAINS" ]; then
+		echo "
+		server {
+			listen 80 default_server;
+			
+		" > /etc/nginx/servers/default.conf
+	else
+		echo "
+		server {
+			listen 80 default_server;
+			server_name _;
+			return 444;
+		}
+		server {
+			listen 80;
+			server_name 127.0.0.1 $DOMAINS;
+			
+		" > /etc/nginx/servers/default.conf
+	fi
+	
+	# SSL params
+	if [ "$HTTPS" == 'force' ] || [ "$HTTPS" == 'on' ]; then
+		echo "
+		ssl_certificate /etc/nginx/ssl/fullchain.pem;
+		ssl_certificate_key /etc/nginx/ssl/privkey.pem;
+		ssl_protocols TLSv1.1 TLSv1.2;
+		ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+		ssl_prefer_server_ciphers on;
+		ssl_session_cache shared:SSL:10m;
+		" >> /etc/nginx/servers/default.conf
+		
+		# Generate a selfsigned certificate to use as default
+		mkdir -p /etc/nginx/ssl
+		openssl req -new -newkey rsa:2048 -days 1 -nodes -x509 \
+		    -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=blunt.sh" \
+		    -keyout /etc/nginx/ssl/privkey.pem \
+			-out /etc/nginx/ssl/fullchain.pem
+	fi
+	
+	# Locations
 	echo "
-	server {
-		listen 80 default_server;
 		root \"$APP_DIR/$STATIC_DIR\";
 		
 		# Php files
-		location ~* \\.php\$ {
+		location ~ \\.php\$ {
 			try_files \$uri =404;
 			fastcgi_pass unix:/var/run/php-fpm7.sock;
+		}
+		
+		location = /favicon.ico { access_log off; log_not_found off; }
+		location = /robots.txt  { access_log off; log_not_found off; }
+		
+		# Protection
+		location ~ /\.(?!well-known).* {
+			deny all;
 		}
 		
 		location / {
 			# Cache time
 			add_header \"Cache-Control\" \$cacheable_types;
 		}
-	}" > /etc/nginx/servers/default.conf
+		
+		add_header X-Frame-Options \"SAMEORIGIN\";
+		add_header X-XSS-Protection \"1; mode=block\";
+		add_header X-Content-Type-Options \"nosniff\";
+	}" >> /etc/nginx/servers/default.conf
 fi
 
 # Rename SERVER_SOFTWARE
-sed -i -r 's/(fastcgi_param\s+SERVER_SOFTWARE\s+).*;/\1virtualgarden;/g' /etc/nginx/fastcgi.conf
+sed -i -r 's/(fastcgi_param\s+SERVER_SOFTWARE\s+).*;/\1blunt.sh;/g' /etc/nginx/fastcgi.conf
 
 # Nginx pid file
 mkdir /run/nginx
