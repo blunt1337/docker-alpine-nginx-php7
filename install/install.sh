@@ -1,6 +1,16 @@
 #!/bin/bash
 set -e
 
+# Update package list
+apk upgrade -q -U -a
+
+# Default server RAM
+if [ -z "$RAM" ]; then
+	memory_limit=$(expr $(cat /sys/fs/cgroup/memory/memory.limit_in_bytes) / 1024 / 1024)
+	memory_free=$(free -m | awk 'NR==2{printf $2}')
+	export RAM=$(($memory_limit > $memory_free ? $memory_free : $memory_limit))
+fi
+
 # Call sub scripts
 cd "$(dirname "$0")"
 for script in *; do
@@ -10,5 +20,6 @@ for script in *; do
 done
 
 # Clean
+rm -rf /var/cache/apk/*
 rm -rf /tmp/*
-rm -r "$(dirname "$0")"
+rm -rf "$(dirname "$0")"

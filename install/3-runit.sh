@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# Packages
+apk add --update runit
+
 # Nginx service
 mkdir /etc/service/nginx
 echo "#!/bin/sh

@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
 
+# Packages
+apk add --update nginx
+apk add --update openssl
+apk add --update ca-certificates
+
 # Create a defaut nginx configuration
 max_threads=$(php -r "echo ceil($RAM / 4);")
 
