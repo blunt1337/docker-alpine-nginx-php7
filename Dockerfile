@@ -26,17 +26,13 @@ ARG RAM
 # Maximum upload size (in MB)
 ARG UPLOAD_MAX=10
 
-# Install
-COPY install /install
-RUN /bin/sh /install/install.sh
-
 # App files
 WORKDIR $APP_DIR
 COPY index.php $APP_DIR/$STATIC_DIR/index.php
 
-# Setup
-COPY setup /setup
-RUN /bin/sh /setup/setup.sh
+# Install
+COPY install /install
+RUN /bin/sh /install/install.sh
 
 # Run
 EXPOSE 80 443

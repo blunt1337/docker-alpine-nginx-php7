@@ -1,6 +1,18 @@
 #!/bin/bash
 set -e
 
+# Packages
+apk add --update php7
+apk add --update php7-fpm
+apk add --update php7-curl
+apk add --update php7-gd
+apk add --update php7-json
+apk add --update php7-opcache
+apk add --update php7-pdo_mysql php7-mysqlnd
+apk add --update php7-mbstring
+apk add --update php7-session
+apk add --update php7-openssl
+
 # PHP alias
 if [ ! -f /usr/bin/php ]; then
     ln -s $(which php7) /usr/bin/php
