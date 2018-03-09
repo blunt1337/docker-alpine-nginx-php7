@@ -26,6 +26,15 @@ ONBUILD ARG RAM
 # Maximum upload size (in MB)
 ONBUILD ARG UPLOAD_MAX=10
 
+# Enable a fail2ban like script (possible values: on, off, or manual. Default off)
+ARG FAIL2BAN_ENABLED=off
+
+# Fail2ban blacklist admin url
+ARG FAIL2BAN_BLACKLIST_URL
+
+# Fail2ban blacklist admin url auth user:password
+ARG FAIL2BAN_BLACKLIST_BASIC_AUTH
+
 # App files
 ONBUILD WORKDIR $APP_DIR
 #COPY index.php $APP_DIR/$STATIC_DIR/index.php

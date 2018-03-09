@@ -14,6 +14,8 @@ user $USER $USER;
 worker_processes auto;
 worker_rlimit_nofile 8192;
 
+include /etc/nginx/modules/*.conf;
+
 events {
 	worker_connections $max_threads;
 }
@@ -45,7 +47,7 @@ http {
 	
 	# woff2
 	types {
-    	application/font-woff2 woff2;
+		application/font-woff2 woff2;
 	}
 	
 	# Cache
@@ -88,7 +90,7 @@ if [ ! -f /etc/nginx/servers/default.conf ]; then
 			server_name 127.0.0.1 $DOMAINS;
 			
 			location / {
-	    		rewrite ^ https://\$host\$request_uri? permanent;
+				rewrite ^ https://\$host\$request_uri? permanent;
 			}
 		}
 		server {
@@ -143,8 +145,8 @@ if [ ! -f /etc/nginx/servers/default.conf ]; then
 		# Generate a selfsigned certificate to use as default
 		mkdir -p /etc/nginx/ssl
 		openssl req -new -newkey rsa:2048 -days 1 -nodes -x509 \
-		    -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=blunt.sh" \
-		    -keyout /etc/nginx/ssl/privkey.pem \
+			-subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=blunt.sh" \
+			-keyout /etc/nginx/ssl/privkey.pem \
 			-out /etc/nginx/ssl/fullchain.pem
 	fi
 	

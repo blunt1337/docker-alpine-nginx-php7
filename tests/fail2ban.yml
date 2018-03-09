@@ -1,0 +1,21 @@
+# Test the FAIL2BAN mode
+version: '3.4'
+services:
+  web:
+    build:
+      context: ../
+      args:
+        FAIL2BAN_ENABLED: 'on'
+        FAIL2BAN_BLACKLIST_URL: /blacklist
+        FAIL2BAN_BLACKLIST_BASIC_AUTH: blunt:blacklist
+    # Add the user blunt:test to a .htpasswd and set it up in nginx on all pages
+    command: >
+      /bin/sh -c "
+          echo 'blunt:$$apr1$$utFPiK6O$$tx0ypCcuDscQJRAzEhgcM.' > /etc/nginx/.htpasswd &&
+          sed -i -e 's/server\s*{/\0\nauth_basic \"Restricted Content\"; auth_basic_user_file \/etc\/nginx\/.htpasswd;\n/g' /etc/nginx/servers/default.conf &&
+          runsvdir /etc/service
+      )"
+    ports:
+      - 80:80
+networks:
+  default:
