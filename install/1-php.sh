@@ -15,7 +15,7 @@ apk add --update php7-openssl
 
 # PHP alias
 if [ ! -f /usr/bin/php ]; then
-    ln -s $(which php7) /usr/bin/php
+	ln -s $(which php7) /usr/bin/php
 fi
 
 # PHP ini
