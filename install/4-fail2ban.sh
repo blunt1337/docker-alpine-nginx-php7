@@ -26,7 +26,7 @@ fi
 # Include the api
 if [ -n "$FAIL2BAN_BLACKLIST_URL" ]; then
 	replace=$(echo "$FAIL2BAN_BLACKLIST_URL" | sed 's/[&/\]/\\&/g')
-	sed -i -e "s/server\s*{/\0\nlocation $replace { include \/etc\/nginx\/fail2ban\/api.conf; }\n/g" /etc/nginx/servers/default.conf
+	sed -i -e "s/server\s*{/\0\nlocation $replace { auth_basic off; include \/etc\/nginx\/fail2ban\/api.conf; }\n/g" /etc/nginx/servers/default.conf
 fi
 
 # Check and log failed auth
@@ -72,7 +72,6 @@ fi
 # Show/edit blacklist's page
 cat <<UNICORN > /etc/nginx/fail2ban/api.conf
 default_type 'text/html';
-auth_basic off;
 $include
 content_by_lua_block {
 	$auth_lua
