@@ -22,46 +22,48 @@ Just start it with `docker run -d -p 80:80 -v .:/app blunt1337/nginx-php7 ` to u
 The following configuation can be changed with [build args](https://docs.docker.com/compose/compose-file/#args).  
 You can check the tests folder of this github for samples.
 
-* APP_DIR
+* APP_DIR  
 	Application file directory, default to /app
 
-* STATIC_DIR
+* STATIC_DIR  
 	Document root in APP_DIR.  
 	With STATIC_DIR=public, the url http://host/ will fetch /app/public/index.php.  
 	Default to APP_DIR root.
 
-* USER
+* USER  
 	User and group running nginx/php process
 
-* HTTPS
+* HTTPS  
 	Possible values are:
 	* off: Only listen for http.
 	* on: Listen for http and https.
 	* force: Listen for http and https, and redirect http to https.
+	
 	Certificates must be placed as `/etc/nginx/ssl/fullchain.pem` and  `/etc/nginx/ssl/privkey.pem`.
 
-* DOMAINS
+* DOMAINS  
 	List of allowed domains. Space separated. Default to all. Required for the https to work.
 
-* RAM
+* RAM  
 	Server RAM in MB to calculate worker numbers, etc. Be default it will take the builder's machine max RAM.
 
-* UPLOAD_MAX
+* UPLOAD_MAX  
 	Maximum upload file size in MB, default to 10MB
 
-* FAIL2BAN_ENABLED
+* FAIL2BAN_ENABLED  
 	Enable a fail2ban like script in lua (NOT the real fail2ban with iptable), inside the nginx conf.  
 	After 5 401 response code, the ip address is banned, and only 503 response code are returned.  
 	Possible values are:
 	 - on: enabled on every pages, catch every 401 everywhere,
 	 - off: disabled,
 	 - manual: insert "include /etc/nginx/fail2ban/check.conf" in locations you want protect.
+	
 	Default to off.
 
-* FAIL2BAN_BLACKLIST_URL
+* FAIL2BAN_BLACKLIST_URL  
 	Fail2ban blacklist admin url, used as nginx "location $here {", so you can use regex, e.g. "~ /bl[ao]cklist".
 
-* FAIL2BAN_BLACKLIST_BASIC_AUTH
+* FAIL2BAN_BLACKLIST_BASIC_AUTH  
 	Fail2ban blacklist admin url's auth, in format user:password.
 
 ## I need more PHP modules
