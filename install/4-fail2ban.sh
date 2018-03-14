@@ -13,24 +13,16 @@ fi
 # Package
 apk add --update nginx-mod-http-lua
 
-# Global http instruction
+#######################################################
+# Create scripts
+mkdir /etc/nginx/fail2ban
+
+# Init script
 echo "lua_shared_dict blacklist 10m;
 access_by_lua_no_postpone on;
-$(cat /etc/nginx/servers/default.conf)" > /etc/nginx/servers/default.conf
-
-# Include 'check/log' script in all server { .. }
-if [ "$FAIL2BAN_ENABLED" == 'on' ]; then
-	sed -i -e 's/server\s*{/\0\ninclude \/etc\/nginx\/fail2ban\/check.conf;\n/g' /etc/nginx/servers/default.conf
-fi
-
-# Include the api
-if [ -n "$FAIL2BAN_BLACKLIST_URL" ]; then
-	replace=$(echo "$FAIL2BAN_BLACKLIST_URL" | sed 's/[&/\]/\\&/g')
-	sed -i -e "s/server\s*{/\0\nlocation $replace { auth_basic off; include \/etc\/nginx\/fail2ban\/api.conf; }\n/g" /etc/nginx/servers/default.conf
-fi
+" > /etc/nginx/fail2ban/init.conf
 
 # Check and log failed auth
-mkdir /etc/nginx/fail2ban
 cat <<'UNICORN' > /etc/nginx/fail2ban/check.conf
 # Check the client IP address is in our blacklist
 access_by_lua_block {
@@ -50,18 +42,10 @@ log_by_lua_block {
 }
 UNICORN
 
-# Blacklist password
-base64_password=$(echo -n "$FAIL2BAN_BLACKLIST_BASIC_AUTH" | base64)
-
-# Insert the fail2ban/check script if manual
-include=''
-if [ "$FAIL2BAN_ENABLED" == 'manual' ]; then
-	include="\ninclude /etc/nginx/fail2ban/check.conf;"
-fi
-
 # Auth code for the api
 auth_lua=''
 if [ -n "$FAIL2BAN_BLACKLIST_BASIC_AUTH" ]; then
+	base64_password=$(echo -n "$FAIL2BAN_BLACKLIST_BASIC_AUTH" | base64)
 	auth_lua="-- Auth
 	if ngx.var.http_Authorization ~= 'Basic $base64_password' then
 		ngx.header['WWW-Authenticate'] = 'Basic realm=\"Private url\"'
@@ -72,7 +56,6 @@ fi
 # Show/edit blacklist's page
 cat <<UNICORN > /etc/nginx/fail2ban/api.conf
 default_type 'text/html';
-$include
 content_by_lua_block {
 	$auth_lua
 	-- Remove a banned ip
@@ -119,3 +102,28 @@ content_by_lua_block {
 	end
 }
 UNICORN
+
+#######################################################
+# Install scripts
+
+# Init script before all servers
+ln -s /etc/nginx/fail2ban/init.conf /etc/nginx/servers/4-fail2ban-init.conf
+
+# Include 'check/log' script in server { .. }
+if [ "$FAIL2BAN_ENABLED" == 'on' ]; then
+	ln -s /etc/nginx/fail2ban/check.conf /etc/nginx/locations/4.0-fail2ban-check.conf
+fi
+
+# Include the api
+if [ -n "$FAIL2BAN_BLACKLIST_URL" ]; then
+	include=''
+	if [ "$FAIL2BAN_ENABLED" == 'manual' ]; then
+		include="include /etc/nginx/fail2ban/check.conf;"
+	fi
+	
+	echo "location $FAIL2BAN_BLACKLIST_URL {
+		auth_basic off;
+		$include
+		/etc/nginx/fail2ban/api.conf;
+	}" > /etc/nginx/locations/4.1-fail2ban-api.conf
+fi

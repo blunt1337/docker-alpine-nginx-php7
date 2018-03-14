@@ -77,17 +77,21 @@ http {
 # Default nginx configuration
 if [ ! -f /etc/nginx/servers/default.conf ]; then
 	mkdir -p /etc/nginx/servers
+	mkdir -p /etc/nginx/locations /etc/nginx/locations/http /etc/nginx/locations/no_domain
 	
 	if [ "$HTTPS" == 'force' ]; then
 		echo "
 		server {
 			listen 80 default_server;
 			server_name _;
+			include /etc/nginx/locations/no_domain/*.conf;
 			return 444;
 		}
 		server {
 			listen 80;
 			server_name 127.0.0.1 $DOMAINS;
+			
+			include /etc/nginx/locations/http/*.conf;
 			
 			location / {
 				rewrite ^ https://\$host\$request_uri? permanent;
@@ -103,6 +107,7 @@ if [ ! -f /etc/nginx/servers/default.conf ]; then
 		server {
 			listen 80 default_server;
 			server_name _;
+			include /etc/nginx/locations/no_domain/*.conf;
 			return 444;
 		}
 		server {
@@ -110,24 +115,29 @@ if [ ! -f /etc/nginx/servers/default.conf ]; then
 			listen 443 ssl http2;
 			server_name 127.0.0.1 $DOMAINS;
 			
+			include /etc/nginx/locations/http/*.conf;
 		" > /etc/nginx/servers/default.conf
 	elif [ -z "$DOMAINS" ]; then
 		echo "
 		server {
 			listen 80 default_server;
 			
+			include /etc/nginx/locations/no_domain/*.conf;
+			include /etc/nginx/locations/http/*.conf;
 		" > /etc/nginx/servers/default.conf
 	else
 		echo "
 		server {
 			listen 80 default_server;
 			server_name _;
+			include /etc/nginx/locations/no_domain/*.conf;
 			return 444;
 		}
 		server {
 			listen 80;
 			server_name 127.0.0.1 $DOMAINS;
 			
+			include /etc/nginx/locations/http/*.conf;
 		" > /etc/nginx/servers/default.conf
 	fi
 	
@@ -154,12 +164,16 @@ if [ ! -f /etc/nginx/servers/default.conf ]; then
 	echo "
 		root \"$APP_DIR/$STATIC_DIR\";
 		
+		# Custom Locations
+		include /etc/nginx/locations/*.conf;
+		
 		# Php files
 		location ~ \\.php\$ {
 			try_files \$uri =404;
 			fastcgi_pass unix:/var/run/php-fpm7.sock;
 		}
 		
+		# Log ignored
 		location = /favicon.ico { access_log off; log_not_found off; }
 		location = /robots.txt  { access_log off; log_not_found off; }
 		
@@ -168,11 +182,10 @@ if [ ! -f /etc/nginx/servers/default.conf ]; then
 			deny all;
 		}
 		
-		location / {
-			# Cache time
-			add_header \"Cache-Control\" \$cacheable_types;
-		}
+		# Cache time
+		add_header \"Cache-Control\" \$cacheable_types;
 		
+		# Security
 		add_header X-Frame-Options \"SAMEORIGIN\";
 		add_header X-XSS-Protection \"1; mode=block\";
 		add_header X-Content-Type-Options \"nosniff\";
