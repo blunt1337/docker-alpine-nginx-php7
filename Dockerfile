@@ -35,6 +35,10 @@ ARG FAIL2BAN_BLACKLIST_URL
 # Fail2ban blacklist admin url auth user:password
 ARG FAIL2BAN_BLACKLIST_BASIC_AUTH
 
+# Country white/black list
+ARG COUNTRY_BLACKLIST
+ARG COUNTRY_WHITELIST
+
 # App files
 WORKDIR $APP_DIR
 COPY index.php $APP_DIR/$STATIC_DIR/index.php
