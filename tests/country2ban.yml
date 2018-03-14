@@ -1,0 +1,13 @@
+# Test the Country ban mode
+version: '3.4'
+services:
+  web:
+    build:
+      context: ../
+      args:
+        # TOP 10 hacker countries
+        COUNTRY_BLACKLIST: CN US TR RU TW BR RO IN IT HU
+    ports:
+      - 80:80
+networks:
+  default:
