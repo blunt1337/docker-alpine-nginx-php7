@@ -79,6 +79,12 @@ if [ ! -f /etc/nginx/servers/default.conf ]; then
 	mkdir -p /etc/nginx/servers
 	mkdir -p /etc/nginx/locations /etc/nginx/locations/http /etc/nginx/locations/no_domain
 	
+	# Check that we have the domain
+	if [ -z "$DOMAINS" ] && ([ "$HTTPS" == 'on' ] || [ "$HTTPS" == 'force' ]); then
+		echo 'Missing parameter $DOMAINS required for https' >&2
+		exit 1
+	fi
+	
 	if [ "$HTTPS" == 'force' ]; then
 		echo "
 		server {
@@ -157,7 +163,7 @@ if [ ! -f /etc/nginx/servers/default.conf ]; then
 		openssl req -new -newkey rsa:2048 -days 1 -nodes -x509 \
 			-subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=blunt.sh" \
 			-keyout /etc/nginx/ssl/privkey.pem \
-			-out /etc/nginx/ssl/fullchain.pem
+			-out /etc/nginx/ssl/fullchain.pem 2>/dev/null
 	fi
 	
 	# Locations

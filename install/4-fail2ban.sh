@@ -6,7 +6,7 @@ set -e
 
 # Param check
 if [ -n "$FAIL2BAN_BLACKLIST_URL" ] && [ -z "$FAIL2BAN_BLACKLIST_BASIC_AUTH" ]; then
-	echo "Missing parameter \$FAIL2BAN_BLACKLIST_BASIC_AUTH"
+	echo 'Missing parameter $FAIL2BAN_BLACKLIST_BASIC_AUTH' >&2
 	exit 1
 fi
 
