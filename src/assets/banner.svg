@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="100%" height="100%" viewBox="0 0 255 300" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" preserveAspectRatio="none">
+
+<filter id="dropshadow" height="130%">
+	<feGaussianBlur in="SourceAlpha" stdDeviation="3"/> <!-- stdDeviation is how much to blur -->
+	<feOffset dx="3" dy="3" result="offsetblur"/> <!-- how much to offset -->
+	<feComponentTransfer>
+		<feFuncA type="linear" slope="0.1"/> <!-- slope is the opacity of the shadow -->
+	</feComponentTransfer>
+	<feMerge> 
+		<feMergeNode/> <!-- this contains the offset blurred image -->
+		<feMergeNode in="SourceGraphic"/> <!-- this contains the element that the filter is applied to -->
+	</feMerge>
+</filter>
+
+<rect x="99.019" y="169.22" width="159" height="131.5"/>
+<path d="M86.5,2.88l171.667,1l0,190.359c-6.337,-18.203 -27.648,-21.53 -38.753,-13.355c-18.505,13.622 -42.44,22.839 -54.17,18.262c-25.784,-10.062 -87.543,-2.005 -38.216,42.462c34.899,31.461 11.484,49.345 -6.45,60.392l-34.178,-0.85l0.1,-298.27Z" style="filter:url(#dropshadow)"/>
+<path d="M66.25,-3.12l191.917,0.5l0,166.051c-11.694,-2.86 -26.552,-8.987 -45.578,5.723c-17.283,13.364 -29.299,20.807 -63.481,12.102c-53.313,-13.577 -76.22,24.628 -50.53,59.023c19.723,26.406 5.783,50.809 -1.757,60.721l-30.821,0.75l0.25,-304.87Z" style="filter:url(#dropshadow)"/>
+<path d="M31,-3.37l227.667,1l-0.5,150.708c-24.047,-15.328 -46.279,-18.599 -66.384,-0.839c-12.739,11.252 -26.327,25.265 -71.549,15.074c-55.927,-12.604 -59.878,37.528 -43.312,57.536c16.348,19.745 23.142,36.942 4.459,53.927c-10.36,9.418 -13.409,19.685 -14.068,26.964l-32.063,1.25l-4.25,-305.62Z" style="filter:url(#dropshadow)"/>
+<path d="M-1.5,-1.62l259.417,-0.5l0.25,88.072c-25.612,-2.748 -46.244,11.166 -55.556,32.672c-8.917,20.594 -36.942,46.709 -83.863,30.361c-69.554,-24.234 -64.331,35.243 -60.085,50.318c4.247,15.074 17.622,16.56 -7.218,49.893c-20.893,28.035 -13.7,46.608 -10.886,51.804l-41.809,0.25l-0.25,-302.87Z" style="filter:url(#dropshadow)"/>
+<path d="M-2,-2.87l259.917,-0.25l-0.954,57.838c-39.066,-4.246 -54.683,12.382 -69.426,47.134c-11.89,28.025 -41.461,48.734 -71.549,21.443c-35.028,-31.771 -59.123,3.611 -59.66,16.985c-1.22,30.348 -11.889,32.271 -35.456,58.598c-48.586,54.277 7.395,61.91 17.878,102.122l-40,0.5l-0.75,-304.37Z" style="filter:url(#dropshadow)"/>
+
+</svg>
