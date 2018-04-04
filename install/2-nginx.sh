@@ -177,6 +177,11 @@ if [ ! -f /etc/nginx/servers/default.conf ]; then
 		location ~ \\.php\$ {
 			try_files \$uri =404;
 			fastcgi_pass unix:/var/run/php-fpm7.sock;
+			
+			# Security
+			add_header X-Frame-Options \"SAMEORIGIN\";
+			add_header X-XSS-Protection \"1; mode=block\";
+			add_header X-Content-Type-Options \"nosniff\";
 		}
 		
 		# Log ignored
@@ -190,11 +195,6 @@ if [ ! -f /etc/nginx/servers/default.conf ]; then
 		
 		# Cache time
 		add_header \"Cache-Control\" \$cacheable_types;
-		
-		# Security
-		add_header X-Frame-Options \"SAMEORIGIN\";
-		add_header X-XSS-Protection \"1; mode=block\";
-		add_header X-Content-Type-Options \"nosniff\";
 	}" >> /etc/nginx/servers/default.conf
 fi
 
