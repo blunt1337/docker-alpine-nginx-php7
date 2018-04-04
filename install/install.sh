@@ -11,6 +11,9 @@ if [ -z "$RAM" ]; then
 	export RAM=$(($memory_limit > $memory_free ? $memory_free : $memory_limit))
 fi
 
+# Fix domain separator
+export DOMAINS=$(echo "$DOMAINS" | sed -e 's/[,; ]\+/ /g')
+
 # Call sub scripts
 cd "$(dirname "$0")"
 for script in *; do
