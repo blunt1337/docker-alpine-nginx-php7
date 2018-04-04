@@ -32,7 +32,7 @@ session.use_only_cookies = 1;
 session.hash_function = sha512;
 session.hash_bits_per_character = 5;
 session.entropy_file = /dev/urandom;
-session.entropy_length = 256;
+session.entropy_length = 512;
 session.cookie_httponly = 1;
 
 post_max_size = ${UPLOAD_MAX}M
@@ -40,6 +40,12 @@ upload_max_filesize = ${UPLOAD_MAX}M
 max_file_uploads = ${UPLOAD_MAX}M
 memory_limit = 64M
 " >> /etc/php7/php.ini
+
+# SSL only = cookie secure
+if [ "$HTTPS" == 'force' ]; then
+	echo "session.cookie_secure = 1
+	" >> /etc/php7/php.ini
+fi
 
 # PHP fpm
 max_threads=$(php -r "echo ceil($RAM / 64);")
